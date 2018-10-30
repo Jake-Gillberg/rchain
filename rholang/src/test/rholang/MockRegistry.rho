@@ -1,0 +1,21 @@
+export MockRegistry in {
+  new stderr(`rho:io:stderr`), lastCh in {
+
+    contract @[*MockRegistry, "register"](scheme, @sink, ret) = {
+      new uuid, unregisterToken in {
+        lastCh!(sink) |
+        ret!([*uuid.toByteArray(), *unregisterToken])
+        |
+        stderr!(["@@register", sink, "with scheme:", *scheme, "returning:", [*uuid.toByteArray(), *unregisterToken]])
+      }
+    }
+
+    |
+    // for testing purposes, let holder of MockRegistry peek
+    contract @[*MockRegistry, "getLast"](return) = {
+      for (@last <- lastCh) {
+        return!(last)
+      }
+    }
+  }
+}
